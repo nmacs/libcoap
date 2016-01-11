@@ -814,6 +814,8 @@ cmdline_token(char *arg) {
   the_token.length = strlen(arg);
 }
 
+static unsigned short cmd_port;
+
 static void
 cmdline_option(char *arg) {
   unsigned int num = 0;
@@ -824,6 +826,13 @@ cmdline_option(char *arg) {
   }
   if (*arg == ',')
     ++arg;
+
+  if ( num == 7 ) {
+    cmd_port = htons(atoi((const char *)arg));
+    coap_insert(&optlist,
+        new_option_node(num, sizeof(cmd_port), (unsigned char *)&cmd_port));
+    return;
+  }
 
   coap_insert(&optlist,
               new_option_node(num, strlen(arg), (unsigned char *)arg));
